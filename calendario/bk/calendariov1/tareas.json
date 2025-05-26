@@ -1,0 +1,22 @@
+{
+    "2025-05-21": {
+        "12:00": {
+            "texto": "Prueba",
+            "duracion": "15",
+            "profesional": "Enf. Juan P\u00e9rez"
+        }
+    },
+    "2025-05-23": {
+        "17:00": {
+            "texto": "asdf",
+            "duracion": "60"
+        }
+    },
+    "2025-05-08": {
+        "00:00": {
+            "texto": "asdgasa",
+            "duracion": "60",
+            "profesional": "Dr. Ana Garc\u00eda"
+        }
+    }
+}

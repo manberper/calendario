@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendario</title>
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <aside id="panel-izquierdo">
+    <div id="formulario-container">
+      <h2>Añadir tarea</h2>
+      <form id="formulario">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required>
+
+        <label for="duracion">Duración:</label>
+        <select id="duracion" name="duracion" required>
+          <option value="15">15 minutos</option>
+          <option value="30">30 minutos</option>
+          <option value="45">45 minutos</option>
+          <option value="60" selected>1 hora</option>
+        </select>
+
+        <label for="hora">Hora de inicio:</label>
+        <select id="hora" name="hora" required>
+        </select>
+
+        <label for="profesional">Profesional:</label>
+        <select id="profesional" name="profesional" required>
+            <option value="">Selecciona un profesional</option>
+        </select>
+
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" name="descripcion" required>
+
+        <button type="submit">Añadir Tarea</button>
+      </form>
+    </div>
+
+    <div id="proximas-tareas-container">
+      <h2>Próximas Tareas</h2>
+      <label for="filtroProfesional">Filtrar por Profesional:</label>
+      <select id="filtroProfesional">
+          <option value="">Todos</option>
+      </select>
+      <ul id="lista-proximas-tareas">
+        </ul>
+    </div>
+  </aside>
+
+  <main id="main-content-area">
+    <div id="calendar-header">
+      <button id="prevMonth">&lt;</button>
+      <h2 id="monthYear"></h2>
+      <button id="nextMonth">&gt;</button>
+      <div id="view-selector">
+        <button id="viewMonth" class="active">Mes</button>
+        <button id="viewWeek">Semana</button>
+        <button id="viewDay">Día</button>
+      </div>
+      <input type="date" id="dayPicker" />
+    </div>
+    <div id="calendar" class="calendar-grid-mes"></div>
+  </main>
+
+  <aside id="panel-derecho">
+    <div id="panel-tareas">
+      <h2 id="fecha-panel-tareas">Tareas del Día</h2>
+      
+      <ul id="lista-tareas">
+        </ul>
+    </div>
+  </aside>
+
+  <div id="modal-tarea" class="modal">
+    <div class="modal-contenido">
+      <span class="cerrar-modal" id="cerrar-modal-tarea">&times;</span> <h2>Detalles y Edición de Tarea</h2>
+
+      <h4>Detalles de la Tarea</h4>
+      <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+      <p><strong>Hora:</strong> <span id="detalle-hora"></span></p>
+      <p><strong>Duración:</strong> <span id="detalle-duracion"></span> minutos</p>
+      <p><strong>Profesional:</strong> <span id="detalle-profesional"></span></p>
+      <p><strong>Descripción:</strong> <span id="detalle-descripcion"></span></p>
+
+      <h4>Editar Tarea</h4>
+      <label for="editar-fecha">Fecha:</label>
+      <input type="date" id="editar-fecha">
+
+      <label for="editar-hora">Hora de inicio:</label>
+      <select id="editar-hora"></select>
+
+      <label for="editar-duracion">Duración:</label>
+      <select id="editar-duracion">
+        <option value="15">15 minutos</option>
+        <option value="30">30 minutos</option>
+        <option value="45">45 minutos</option>
+        <option value="60">1 hora</option>
+      </select>
+
+      <label for="editar-profesional">Profesional:</label>
+      <select id="editar-profesional">
+          <option value="">Selecciona un profesional</option>
+      </select>
+
+      <label for="editar-descripcion">Descripción:</label>
+      <input type="text" id="editar-descripcion">
+
+      <div class="modal-botones">
+        <button id="guardar-cambios">Guardar</button>
+        <button id="eliminar-tarea">Eliminar</button>
+        <button id="cancelar-edicion">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="calendar.js"></script> <script src="main.js"></script>    <script src="script.js"></script>
+
+</body>
+</html>

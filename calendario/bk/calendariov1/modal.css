@@ -1,0 +1,114 @@
+/* Estilo general del modal */
+#modal-tarea,
+#modal-detalles { /* Ambos modales comparten estos estilos */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(3, 5, 22, 0.932);
+  display: none; /* Por defecto oculto */
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* Contenedor del contenido */
+.modal-contenido {
+  background-color: #ffffff28;
+  padding: 30px;
+  width: 500px;
+  max-width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.904);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: #fff; /* Asegurar que el texto sea blanco */
+}
+
+/* Título del modal */
+.modal-contenido h3 {
+  margin-top: 0;
+  font-size: 24px;
+  text-align: center;
+}
+
+/* Inputs y select */
+.modal-contenido label {
+  font-weight: bold;
+}
+
+.modal-contenido input[type="text"],
+.modal-contenido select {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  background-color: #333; /* Fondo oscuro para inputs/selects */
+  color: #fff; /* Texto blanco en inputs/selects */
+}
+
+.modal-contenido input[type="text"]:focus,
+.modal-contenido select:focus {
+  border-color: #7b2ff7;
+  outline: none;
+}
+
+/* Estilos específicos para el modal de detalles */
+#modal-detalles .modal-contenido p {
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+
+#modal-detalles .modal-contenido p strong {
+    color: #f107a3; /* Color de acento para los títulos de los detalles */
+    margin-right: 5px;
+}
+
+
+/* Botones del modal */
+.modal-botones {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.modal-botones button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: white; /* Color de texto blanco para los botones */
+}
+
+#guardar-cambios {
+  background-color: #4CAF50; /* Verde */
+}
+
+#guardar-cambios:hover {
+  background-color: #45a049;
+}
+
+#eliminar-tarea {
+  background-color: #f44336; /* Rojo */
+}
+
+#eliminar-tarea:hover {
+  background-color: #da190b;
+}
+
+#cancelar-edicion,
+#cerrar-detalles { /* Botón de cerrar para ambos modales */
+  background-color: #7b2ff7; /* Color principal */
+}
+
+#cancelar-edicion:hover,
+#cerrar-detalles:hover {
+  background-color: #a04aff;
+}

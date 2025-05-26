@@ -1,0 +1,403 @@
+/* -------------------------------
+   Estilos base para el calendario
+---------------------------------- */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #4d2ff7, #f10713);
+  color: #fff;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  flex-direction: row;
+}
+
+#panel-izquierdo,
+#panel-tareas {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  margin: 20px 10px;
+  color: white;
+}
+
+#panel-izquierdo {
+  width: 250px;
+  display: flex;
+  flex-direction: column; /* Cambiado a column para apilar los nuevos divs */
+  gap: 15px;
+  overflow-y: auto; /* Permite scroll si el contenido es mucho */
+}
+
+/* Nuevos estilos para los contenedores dentro del panel izquierdo */
+#formulario-container,
+#proximas-tareas-container {
+  background: rgba(255, 255, 255, 0.05); /* Un fondo ligeramente diferente para diferenciarlos */
+  padding: 15px;
+  border-radius: 10px;
+  flex-shrink: 0; /* Evita que se encoja si el contenido es grande */
+}
+
+#proximas-tareas-container {
+    flex-grow: 1; /* Permite que este contenedor ocupe el espacio restante */
+    display: flex;
+    flex-direction: column;
+}
+
+#lista-proximas-tareas {
+    flex-grow: 1;
+    overflow-y: auto; /* Scroll individual para la lista de tareas */
+    padding-right: 5px; /* Pequeño padding para el scrollbar */
+}
+
+/* Estilos para los ítems de las próximas tareas */
+.proxima-tarea-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    display: flex; /* Añadido flexbox */
+    justify-content: space-between; /* Espacio entre el contenido y el botón */
+    align-items: center; /* Alinear verticalmente los elementos */
+}
+
+.proxima-tarea-item strong {
+    color: #f107a3; /* Color de énfasis para la hora */
+    font-size: 1.1em;
+    margin-bottom: 3px;
+    display: block; /* Para que la hora/descripción ocupe su propia línea */
+}
+
+.proxima-tarea-item span {
+    font-size: 0.85em;
+    color: #ccc;
+    display: block; /* Para que la fecha/duración/profesional ocupe su propia línea */
+}
+
+
+#panel-izquierdo h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 10px; /* Ajuste para el nuevo contenedor */
+}
+
+#panel-izquierdo form label {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#panel-izquierdo form select,
+#panel-izquierdo form input[type="text"],
+#panel-izquierdo form input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  height: 40px;
+  outline: none;
+}
+
+#panel-izquierdo form input[type="submit"],
+#panel-izquierdo form input[type="reset"] {
+  margin-top: 15px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f107a3;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 48%;
+  height: 40px;
+}
+
+#panel-izquierdo form input[type="submit"]:hover,
+#panel-izquierdo form input[type="reset"]:hover {
+  background-color: #a00473;
+}
+
+#panel-izquierdo form input[type="submit"]:active,
+#panel-izquierdo form input[type="reset"]:active {
+  transform: scale(0.95);
+}
+
+#calendar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.75);
+  margin: 20px 0;
+  border-radius: 12px;
+  padding: 15px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+#calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#monthYear {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+#prevMonth, #nextMonth {
+  background: #7b2ff7;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#prevMonth:hover, #nextMonth:hover {
+  background: #a04aff;
+}
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(80px, auto); /* Más alto */
+  gap: 8px;
+  user-select: none;
+  max-height: 100%;
+}
+
+.nombre-dia {
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+.dia {
+  background: rgba(123, 47, 247, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 8px;
+  font-weight: bold;
+  font-size: 1.1em;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.15s ease; /* Añadido 'border' a la transición */
+  border: 2px solid transparent; /* Borde transparente por defecto */
+}
+
+.dia:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px 2px rgba(247, 7, 163, 0.6);
+}
+
+.dia.vacio {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+  border: 2px solid transparent; /* Asegurar que no tenga borde */
+}
+
+.dia.con-tarea::after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  background: yellow;
+  border-radius: 50%;
+  box-shadow: 0 0 5px yellow;
+}
+
+/* Nuevo estilo para el día actual */
+.dia-actual {
+  border: 2px solid #fff; /* Borde blanco para el día actual */
+  box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.5); /* Sombra para resaltarlo */
+}
+
+/* Nuevo estilo para el día seleccionado */
+.dia-seleccionado {
+  transform: scale(1.05); /* Similar al hover */
+  box-shadow: 0 0 15px 4px rgba(247, 7, 163, 0.9); /* Sombra más intensa para el seleccionado */
+  background: rgba(123, 47, 247, 0.6); /* Un poco más oscuro/intenso el fondo */
+  border-color: #f107a3; /* Borde del color de acento */
+}
+
+
+#panel-tareas {
+  width: 300px;
+  overflow-y: auto;
+}
+
+#panel-tareas h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.tarea-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9em;
+}
+
+.tarea-item strong {
+  margin-right: 10px;
+}
+
+.editar-btn,
+.detalles-btn { /* Ahora los dos botones comparten estos estilos base */
+  background: #f107a3;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  padding: 5px 8px;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+  margin-left: 5px; /* Para separarlos del texto o de otros botones */
+  flex-shrink: 0; /* Evita que el botón se encoja si el espacio es limitado */
+}
+
+.editar-btn:hover,
+.detalles-btn:hover {
+  background: #a00473;
+}
+
+
+#panel-tareas {
+  scrollbar-width: thin;
+  scrollbar-color: #f107a3 transparent;
+}
+
+#panel-tareas::-webkit-scrollbar {
+  width: 8px;
+}
+
+#panel-tareas::-webkit-scrollbar-thumb {
+  background-color: #f107a3;
+  border-radius: 4px;
+}
+
+/* Scrollbar para #lista-proximas-tareas */
+#lista-proximas-tareas {
+  scrollbar-width: thin;
+  scrollbar-color: #7b2ff7 transparent; /* Color diferente para distinguir */
+}
+
+#lista-proximas-tareas::-webkit-scrollbar {
+  width: 8px;
+}
+
+#lista-proximas-tareas::-webkit-scrollbar-thumb {
+  background-color: #7b2ff7;
+  border-radius: 4px;
+}
+
+/* -------------------------------
+   Media Queries para Responsividad
+---------------------------------- */
+
+/* Pantallas pequeñas: móviles */
+@media (max-width: 600px) {
+  body {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  #panel-izquierdo,
+  #panel-tareas {
+    width: 95%;
+    margin: 10px;
+  }
+
+  #calendar-container {
+    margin: 10px;
+  }
+
+  #calendar {
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(50px, auto);
+  }
+
+  #calendar-header {
+    flex-direction: row; /* Cambiado a fila para que estén lado a lado */
+    justify-content: space-between; /* Para que los botones estén a los extremos */
+    gap: 0; /* No necesitamos gap vertical */
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan si el espacio es muy pequeño */
+    align-items: center; /* Centrar verticalmente */
+  }
+
+  #calendar-header #monthYear {
+    order: 1; /* Establece el orden del elemento, para que el mes aparezca en medio */
+    flex-basis: 100%; /* Ocupa todo el ancho disponible para el texto del mes */
+    text-align: center; /* Centra el texto */
+    margin-bottom: 10px; /* Espacio debajo del mes y encima de los botones */
+  }
+
+  #calendar-header #prevMonth {
+      order: 2; /* Izquierda */
+  }
+
+  #calendar-header #nextMonth {
+      order: 3; /* Derecha */
+  }
+
+}
+
+/* Pantallas medianas: tablets */
+@media (min-width: 601px) and (max-width: 1024px) {
+  body {
+    flex-direction: column;
+    height: auto;
+  }
+
+  #panel-izquierdo,
+  #panel-tareas {
+    width: 90%;
+    margin: 15px auto;
+  }
+
+  #calendar-container {
+    margin: 15px auto;
+    width: 95%;
+  }
+
+  #calendar {
+    grid-auto-rows: minmax(90px, auto);
+  }
+}
+
+/* Pantallas grandes: escritorio */
+@media (min-width: 1025px) {
+  #calendar {
+    grid-auto-rows: minmax(150px, auto);
+  }
+}

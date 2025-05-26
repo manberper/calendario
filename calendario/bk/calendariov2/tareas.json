@@ -1,0 +1,95 @@
+{
+    "2025-05-21": {
+        "09:00": [
+            {
+                "texto": "Revisión general",
+                "duracion": "30",
+                "profesional": "Dr. Ana García"
+            },
+            {
+                "texto": "Sesión de seguimiento",
+                "duracion": "45",
+                "profesional": "Psic. Carlos Ruiz"
+            }
+        ],
+        "10:30": [
+            {
+                "texto": "Cambio de vendaje",
+                "duracion": "15",
+                "profesional": "Enf. Juan Pérez"
+            }
+        ],
+        "14:00": [
+            {
+                "texto": "Consulta de fisioterapia",
+                "duracion": "60",
+                "profesional": "Fisio. Laura Sanz"
+            }
+        ]
+    },
+    "2025-05-22": {
+        "08:15": [
+            {
+                "texto": "Análisis de sangre",
+                "duracion": "15",
+                "profesional": "Enf. Juan Pérez"
+            }
+        ],
+        "11:00": [
+            {
+                "texto": "Diagnóstico inicial",
+                "duracion": "30",
+                "profesional": "Dra. Marta López"
+            },
+            {
+                "texto": "Terapia de apoyo",
+                "duracion": "60",
+                "profesional": "Psic. Carlos Ruiz"
+            }
+        ],
+        "16:45": [
+            {
+                "texto": "Rehabilitación de rodilla",
+                "duracion": "45",
+                "profesional": "Fisio. Laura Sanz"
+            }
+        ]
+    },
+    "2025-05-23": {
+        "09:30": [
+            {
+                "texto": "Chequeo pediátrico",
+                "duracion": "30",
+                "profesional": "Dr. Ana García"
+            }
+        ],
+        "15:00": [
+            {
+                "texto": "Vacunación",
+                "duracion": "15",
+                "profesional": "Enf. Juan Pérez"
+            },
+            {
+                "texto": "Sesión de relajación",
+                "duracion": "30",
+                "profesional": "Psic. Carlos Ruiz"
+            }
+        ]
+    },
+    "2025-05-26": {
+        "10:00": [
+            {
+                "texto": "Segunda opinión médica",
+                "duracion": "60",
+                "profesional": "Dra. Marta López"
+            }
+        ],
+        "11:00": [
+            {
+                "texto": "Preparación para cirugía",
+                "duracion": "30",
+                "profesional": "Dr. Ana García"
+            }
+        ]
+    }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendario</title>
+  <link rel="stylesheet" href="estilos.css" />
+  <link rel="stylesheet" href="modal.css" />
+</head>
+<body>
+  <aside id="panel-izquierdo">
+    <div id="formulario-container">
+      <h2>Añadir tarea</h2>
+      <form id="formulario">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required>
+
+        <label for="duracion">Duración:</label>
+        <select id="duracion" name="duracion" required>
+          <option value="15">15 minutos</option>
+          <option value="30">30 minutos</option>
+          <option value="45">45 minutos</option>
+          <option value="60" selected>1 hora</option>
+        </select>
+
+        <label for="hora">Hora de inicio:</label>
+        <select id="hora" name="hora" required>
+          </select>
+
+        <label for="profesional">Profesional:</label> <select id="profesional" name="profesional" required>
+          </select>
+
+        <label for="descripcion">Tarea:</label>
+        <input type="text" id="descripcion" name="descripcion" placeholder="Descripción de la tarea" required />
+
+        <input type="submit" value="Añadir" />
+        <input type="reset" value="Limpiar" />
+      </form>
+    </div>
+
+    <div id="proximas-tareas-container">
+      <h2>Próximas Tareas</h2>
+      <div id="lista-proximas-tareas">
+        </div>
+    </div>
+  </aside>
+
+  <section id="calendar-container">
+    <div id="calendar-header">
+      <button id="prevMonth" title="Mes anterior">&lt;</button>
+      <div id="monthYear"></div>
+      <button id="nextMonth" title="Mes siguiente">&gt;</button>
+    </div>
+    <div id="calendar">
+      </div>
+  </section>
+
+  <aside id="panel-tareas">
+    <h3>Selecciona un día para ver tareas</h3>
+  </aside>
+
+  <div id="modal-tarea">
+    <div class="modal-contenido">
+      <h3>Editar tarea</h3>
+      <label for="editar-descripcion">Descripción:</label>
+      <input type="text" id="editar-descripcion" />
+
+      <label for="editar-duracion">Duración:</label>
+      <select id="editar-duracion">
+        <option value="15">15 minutos</option>
+        <option value="30">30 minutos</option>
+        <option value="45">45 minutos</option>
+        <option value="60">1 hora</option>
+      </select>
+      
+      <label for="editar-profesional">Profesional:</label> <select id="editar-profesional">
+        </select>
+
+      <div class="modal-botones">
+        <button id="guardar-cambios">Guardar</button>
+        <button id="eliminar-tarea">Eliminar</button>
+        <button id="cancelar-edicion">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-detalles">
+    <div class="modal-contenido">
+      <h3>Detalles de la Tarea</h3>
+      <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+      <p><strong>Hora:</strong> <span id="detalle-hora"></span></p>
+      <p><strong>Duración:</strong> <span id="detalle-duracion"></span> minutos</p>
+      <p><strong>Profesional:</strong> <span id="detalle-profesional"></span></p>
+      <p><strong>Descripción:</strong> <span id="detalle-descripcion"></span></p>
+      <div class="modal-botones">
+        <button id="cerrar-detalles">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="script.js" defer></script>
+</body>
+</html>
