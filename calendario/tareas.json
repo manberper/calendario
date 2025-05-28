@@ -1,0 +1,92 @@
+{
+    "2025-05-22": [
+        {
+            "hora": "09:00",
+            "duracion": 60,
+            "profesional": "p1",
+            "descripcion": "Consulta Dr. Garc\u00eda"
+        },
+        {
+            "hora": "10:30",
+            "duracion": 45,
+            "profesional": "p2",
+            "descripcion": "Revisi\u00f3n Dra. L\u00f3pez"
+        },
+        {
+            "hora": "12:00",
+            "duracion": 30,
+            "profesional": "p1",
+            "descripcion": "Terapia Enf. Juan P\u00e9rez"
+        }
+    ],
+    "2025-05-23": [
+        {
+            "hora": "11:00",
+            "duracion": 60,
+            "profesional": "p3",
+            "descripcion": "Rehabilitaci\u00f3n Fisio. Laura Sanz"
+        },
+        {
+            "hora": "11:00",
+            "duracion": 30,
+            "profesional": "p1",
+            "descripcion": "Seguimiento Dr. Garc\u00eda"
+        },
+        {
+            "hora": "14:00",
+            "duracion": 90,
+            "profesional": "p4",
+            "descripcion": "Sesi\u00f3n Psic. Carlos Ruiz"
+        }
+    ],
+    "2025-05-24": [
+        {
+            "hora": "09:30",
+            "duracion": 60,
+            "profesional": "p2",
+            "descripcion": "Chequeo General Dra. L\u00f3pez"
+        },
+        {
+            "hora": "10:30",
+            "duracion": 30,
+            "profesional": "p5",
+            "descripcion": "Prueba de Laboratorio"
+        }
+    ],
+    "2025-05-25": [
+        {
+            "hora": "16:00",
+            "duracion": 60,
+            "profesional": "p1",
+            "descripcion": "Control Post-operatorio"
+        }
+    ],
+    "2025-05-28": [
+        {
+            "hora": "08:00",
+            "duracion": 30,
+            "profesional": "p5",
+            "descripcion": "123asdf"
+        },
+        {
+            "hora": "13:00",
+            "duracion": 60,
+            "profesional": "p2",
+            "descripcion": "Prueba"
+        },
+        {
+            "hora": "15:00",
+            "duracion": 60,
+            "profesional": "p4",
+            "descripcion": "Prueba"
+        }
+    ],
+    "2025-05-29": [
+        {
+            "hora": "08:00",
+            "duracion": 30,
+            "profesional": "p3",
+            "descripcion": "Prueba"
+        }
+    ]
+}

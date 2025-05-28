@@ -1,0 +1,155 @@
+/* Estilo general del modal */
+#modal-tarea,
+#modal-detalles { /* Ambos modales comparten estos estilos */
+  position: fixed; /* Esto es CLAVE para que aparezca superpuesto */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(3, 5, 22, 0.932); /* Fondo oscuro semitransparente */
+  display: none; /* Por defecto oculto (se cambia a flex con JS) */
+  align-items: center; /* Centra el contenido verticalmente */
+  justify-content: center; /* Centra el contenido horizontalmente */
+  z-index: 999; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Contenedor del contenido del modal */
+.modal-contenido {
+  background-color: #ffffff28; /* Fondo translúcido para el contenido */
+  padding: 30px;
+  width: 500px; /* Ancho deseado del modal */
+  max-width: 90%; /* Asegura que no se desborde en pantallas pequeñas */
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.904);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Espacio entre los elementos internos del modal */
+  color: #fff; /* Asegurar que el texto sea blanco */
+}
+
+/* Título del modal */
+.modal-contenido h3 {
+  margin-top: 0;
+  font-size: 24px;
+  text-align: center;
+  color: #f107a3; /* Color de acento para el título */
+}
+
+/* Inputs y select dentro del modal */
+.modal-contenido label {
+  font-weight: bold;
+  margin-bottom: 5px; /* Pequeño espacio debajo de la etiqueta */
+}
+
+.modal-contenido input[type="text"],
+.modal-contenido select {
+  width: 100%; /* Ocupa todo el ancho disponible */
+  padding: 10px;
+  margin-bottom: 10px; /* Espacio debajo del input/select */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background-color: rgba(0, 0, 0, 0.2); /* Fondo más oscuro para los inputs */
+  color: #fff; /* Texto blanco en inputs/selects */
+  box-sizing: border-box; /* Incluir padding en el ancho */
+}
+
+.modal-contenido input[type="text"]:focus,
+.modal-contenido select:focus {
+  border-color: #7b2ff7; /* Borde de enfoque con color de acento */
+  outline: none; /* Eliminar el outline por defecto del navegador */
+}
+
+/* Estilos específicos para el modal de detalles */
+#modal-detalles .modal-contenido p {
+    margin: 5px 0;
+    font-size: 1.1em;
+    line-height: 1.5; /* Espaciado de línea para legibilidad */
+}
+
+#modal-detalles .modal-contenido p strong {
+    color: #f107a3; /* Color de acento para los títulos de los detalles */
+    margin-right: 5px;
+}
+
+
+/* Botones del modal */
+.modal-botones {
+  display: flex;
+  justify-content: space-evenly; /* Distribuye los botones equitativamente */
+  margin-top: 20px;
+  gap: 10px; /* Espacio entre los botones */
+}
+
+.modal-botones button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  flex-grow: 1; /* Permite que los botones se expandan */
+  max-width: 150px; /* Ancho máximo para evitar que sean demasiado grandes */
+}
+
+/* Estilo para el botón "Guardar" y "Editar" */
+#guardar-cambios,
+#editar-tarea-desde-detalles { /* Añado el nuevo ID aquí */
+  background-color: #7b2ff7;
+  color: white;
+}
+
+#guardar-cambios:hover,
+#editar-tarea-desde-detalles:hover {
+  background-color: #5c1bb7;
+  transform: translateY(-2px);
+}
+
+/* Estilo para el botón "Eliminar" */
+#eliminar-tarea {
+  background-color: #f10713; /* Rojo para eliminar */
+  color: white;
+}
+
+#eliminar-tarea:hover {
+  background-color: #d1050f;
+  transform: translateY(-2px);
+}
+
+/* Estilo para el botón "Cancelar" y "Cerrar" */
+#cancelar-edicion,
+#cerrar-detalles {
+  background-color: rgba(255, 255, 255, 0.15); /* Gris translúcido */
+  color: white;
+}
+
+#cancelar-edicion:hover,
+#cerrar-detalles:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Media Queries para Modales en pantallas pequeñas */
+@media (max-width: 600px) {
+    .modal-contenido {
+        padding: 20px;
+        gap: 10px;
+    }
+
+    .modal-contenido h3 {
+        font-size: 20px;
+    }
+
+    .modal-botones {
+        flex-direction: column; /* Apilar botones en pantallas pequeñas */
+        gap: 8px;
+    }
+
+    .modal-botones button {
+        width: 100%; /* Ocupar todo el ancho disponible */
+        max-width: none; /* Eliminar el max-width */
+    }
+
+    #modal-detalles .modal-contenido p {
+        font-size: 1em;
+    }
+}

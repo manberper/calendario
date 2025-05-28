@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendario</title>
+  <link rel="stylesheet" href="./estilos.css" />
+  <link rel="stylesheet" href="./modal.css">
+</head>
+<body>
+  <aside id="panel-izquierdo">
+    <div id="formulario-container">
+      <h2>Añadir tarea</h2>
+      <form id="formulario">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required>
+
+        <label for="duracion">Duración:</label>
+        <select id="duracion" name="duracion" required>
+          <option value="15">15 minutos</option>
+          <option value="30">30 minutos</option>
+          <option value="45">45 minutos</option>
+          <option value="60" selected>1 hora</option>
+        </select>
+
+        <label for="hora">Hora de inicio:</label>
+        <select id="hora" name="hora" required>
+          </select>
+
+        <label for="profesional">Profesional:</label> 
+        <select id="profesional" name="profesional" required>
+            <option value="">Selecciona un profesional</option> 
+        </select>
+
+        <label for="descripcion">Tarea:</label>
+        <input type="text" id="descripcion" name="descripcion" required>
+
+        <button type="submit">Añadir Tarea</button>
+      </form>
+    </div>
+
+    <div id="filtro-container">
+        <h3>Filtrar Tareas</h3>
+        <select id="filtro-profesional">
+            <option value="">Todos los profesionales</option>
+            </select>
+    </div>
+
+    <div id="proximas-tareas-container">
+      <h3>Próximas tareas</h3>
+      <ul id="lista-proximas-tareas">
+        </ul>
+    </div>
+  </aside>
+
+<section id="main-content-area">
+  <div id="calendar-view-section">
+    <div id="calendar-header">
+      <button id="prevMonth">&lt;</button> <div id="monthYear"></div>
+      <button id="nextMonth">&gt;</button> <div class="view-buttons">
+        <button id="view-month" class="active">Mes</button>
+        <button id="view-week">Semana</button>
+        <button id="view-day">Día</button>
+      </div>
+    </div>
+    <div id="calendar">
+    </div>
+  </div>
+
+    <div id="panel-tareas">
+      <h3>Tareas para el día seleccionado</h3>
+      <ul id="lista-tareas-dia">
+        </ul>
+    </div>
+  </section>
+
+  <div id="modal-tarea">
+    <div class="modal-contenido">
+      <h3>Editar Tarea</h3>
+      <label for="editar-fecha">Fecha:</label>
+      <input type="date" id="editar-fecha" disabled />
+
+      <label for="editar-hora">Hora:</label>
+      <select id="editar-hora" disabled>
+        </select>
+
+      <label for="editar-descripcion">Descripción:</label>
+      <input type="text" id="editar-descripcion" />
+
+      <label for="editar-duracion">Duración:</label>
+      <select id="editar-duracion">
+        <option value="15">15 minutos</option>
+        <option value="30">30 minutos</option>
+        <option value="45">45 minutos</option>
+        <option value="60">1 hora</option>
+      </select>
+      
+      <label for="editar-profesional">Profesional:</label> 
+      <select id="editar-profesional">
+          <option value="">Selecciona un profesional</option>
+      </select>
+
+      <div class="modal-botones">
+        <button id="guardar-cambios">Guardar</button>
+        <button id="eliminar-tarea">Eliminar</button>
+        <button id="cancelar-edicion">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-detalles">
+    <div class="modal-contenido">
+      <h3>Detalles de la Tarea</h3>
+      <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+      <p><strong>Hora:</strong> <span id="detalle-hora"></span></p>
+      <p><strong>Duración:</strong> <span id="detalle-duracion"></span> minutos</p>
+      <p><strong>Profesional:</strong> <span id="detalle-profesional"></span></p>
+      <p><strong>Descripción:</strong> <span id="detalle-descripcion"></span></p>
+      <div class="modal-botones">
+        <button id="editar-tarea-desde-detalles">Editar</button>
+        <button id="cerrar-detalles">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="calendar.js"></script>
+</body>
+</html>
