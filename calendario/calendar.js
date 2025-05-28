@@ -161,20 +161,17 @@ function generarCalendario() {
                 : tareasDelDia;
 
             if (tareasFiltradas.length > 0) {
-                for (let j = 0; j < Math.min(tareasFiltradas.length, 3); j++) {
+                // Iteramos sobre TODAS las tareas filtradas
+                for (let j = 0; j < tareasFiltradas.length; j++) { // <-- CAMBIO CLAVE AQUÍ: se eliminó Math.min(..., 3)
                     const tarea = tareasFiltradas[j];
                     const tareaItem = document.createElement('p');
                     tareaItem.classList.add('tarea-resumen-item');
                     tareaItem.innerHTML = `<span class="tarea-resumen-hora">${tarea.hora}</span> ${tarea.descripcion}`;
                     tareasResumenContainer.appendChild(tareaItem);
                 }
-                if (tareasFiltradas.length > 3) {
-                    const masTareas = document.createElement('p');
-                    masTareas.classList.add('mas-tareas-indicador');
-                    masTareas.textContent = `+${tareasFiltradas.length - 3} más`;
-                    tareasResumenContainer.appendChild(masTareas);
-                }
+                // ¡Eliminada la condición 'if (tareasFiltradas.length > 3)' y el texto '+X más'!
             } else {
+                // Este bloque se mantiene para cuando no hay tareas
                 const noTareas = document.createElement('p');
                 noTareas.textContent = 'No hay tareas';
                 noTareas.style.opacity = 0.6;
