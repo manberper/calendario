@@ -12,7 +12,7 @@ const monthYear = document.getElementById("monthYear");
 const prevMonthBtn = document.getElementById("prevMonth");
 const nextMonthBtn = document.getElementById("nextMonth");
 const fechaInput = document.getElementById("fecha");
-const duracionSelect = document.getElementById("duracion"); // Asegúrate de que esta variable existe
+const duracionSelect = document.getElementById("duracion");
 const horaSelect = document.getElementById("hora");
 const profesionalSelect = document.getElementById("profesional");
 const tareaInput = document.getElementById("descripcion");
@@ -173,7 +173,7 @@ async function cargarTareasDelServidor() {
 
 
 function guardarTareasEnServidor() {
-    fetch('guardar_tarea.php', { // <--- RUTA CORRECTA A TU SCRIPT PHP
+    fetch('guardar_tarea.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -214,7 +214,7 @@ function renderizarProximasTareas() {
 
     // Iterar sobre todas las fechas en el objeto tareas
     for (const fechaStr in tareas) {
-        const fechaTarea = new Date(fechaStr + 'T00:00:00'); // Asegurarse de que la fecha se interprete como local
+        const fechaTarea = new Date(fechaStr + 'T00:00:00');
         
         // Solo considerar tareas a partir de hoy
         if (fechaTarea >= hoy) {

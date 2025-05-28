@@ -162,14 +162,13 @@ function generarCalendario() {
 
             if (tareasFiltradas.length > 0) {
                 // Iteramos sobre TODAS las tareas filtradas
-                for (let j = 0; j < tareasFiltradas.length; j++) { // <-- CAMBIO CLAVE AQUÍ: se eliminó Math.min(..., 3)
+                for (let j = 0; j < tareasFiltradas.length; j++) { 
                     const tarea = tareasFiltradas[j];
                     const tareaItem = document.createElement('p');
                     tareaItem.classList.add('tarea-resumen-item');
                     tareaItem.innerHTML = `<span class="tarea-resumen-hora">${tarea.hora}</span> ${tarea.descripcion}`;
                     tareasResumenContainer.appendChild(tareaItem);
                 }
-                // ¡Eliminada la condición 'if (tareasFiltradas.length > 3)' y el texto '+X más'!
             } else {
                 // Este bloque se mantiene para cuando no hay tareas
                 const noTareas = document.createElement('p');
@@ -276,14 +275,7 @@ function generarCalendario() {
 // Función unificada para renderizar todo lo necesario en la UI
 function renderizarTodoElCalendarioUI() {
     generarCalendario(); // Regenera el calendario con la vista y el filtro actual
-    // La función generarCalendario ahora es responsable de llamar a renderizarProximasTareas()
-    // y renderizarTareasDelDiaSeleccionado() (para la vista de día o cuando se selecciona un día).
-    // Si no estás en vista de día, asegúrate de que renderizarTareasDelDiaSeleccionado se llame
-    // con el día seleccionado actualmente, o con la fecha de hoy si no hay día seleccionado.
-    
-    // Si no hay un día seleccionado (o si se cambia de mes/semana), mostrar tareas del día de hoy
-    // MODIFICADO: Solo renderizar tareas del día seleccionado si no estamos en vista 'dia'
-    // porque en vista 'dia', las tareas se muestran directamente en los slots de hora.
+
     if (vistaActual !== 'dia') { 
         if (!diaSeleccionadoElement) {
             renderizarTareasDelDiaSeleccionado(formatearFecha(new Date()));
@@ -292,10 +284,6 @@ function renderizarTodoElCalendarioUI() {
             renderizarTareasDelDiaSeleccionado(diaSeleccionadoElement.dataset.date);
         }
     } else {
-        // En vista de día, limpia el panel de tareas o asegúrate de que no se use para evitar duplicidades
-        // El panel de tareas no debe mostrarse cuando la vista es 'dia'
         panelTareas.style.display = 'none'; 
-        // No llamamos a renderizarTareasDelDiaSeleccionado() para la vista 'dia'
-        // ya que las tareas se manejan directamente en los slots del calendario.
     }
 }
