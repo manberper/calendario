@@ -130,21 +130,26 @@ function cargarOpcionesProfesional() {
     }
 }
 
-async function cargarTareasDelServidor() {
-    return new Promise(async (resolve, reject) => {
+async function cargarTareasDelServidor() { // Cambiado el nombre de la función para mayor concisión, si lo deseas
+    // return new Promise(async (resolve, reject) => { // La Promise explícita ya no es tan necesaria con async/await
         try {
-            // Se lee el archivo JSON directamente desde el servidor web como recurso estático
-            const response = await fetch('tareas.json'); 
+            // Se lee el archivo JSON desde la nueva ruta de la API de Node.js
+            const response = await fetch('/api/tareas.json'); // <-- ¡CAMBIO CLAVE AQUÍ!
             
-            // Si el archivo no se encuentra (404) o está vacío
+            // Si el servidor Node.js devuelve un error (ej. 404), ya lo manejamos devolviendo un JSON vacío
+            // Si hay un error HTTP distinto de 404 (ej. 500 del server), lanzamos el error
             if (!response.ok) {
+                // El server.js ya envía un JSON vacío si el archivo no existe (404),
+                // por lo que este `if (response.status === 404)` es menos probable que se active,
+                // a menos que cambies la lógica del server.js.
+                // Sin embargo, lo mantendremos para ser robustos ante cualquier 404 inesperado.
                 if (response.status === 404) {
-                    console.warn("tareas.json no encontrado o vacío. Inicializando calendario.");
+                    console.warn("tareas.json no encontrado en la API o vacío. Inicializando calendario.");
                     tareas = {}; // Si no existe, inicializa 'tareas' como un objeto vacío
-                    resolve();
-                    return; // Termina la función aquí
+                    // resolve(); // Ya no se necesita resolve/reject explícito con el patrón try/catch
+                    return;
                 }
-                throw new Error(`HTTP error! status: ${response.status} al cargar tareas.json.`);
+                throw new Error(`HTTP error! status: ${response.status} al cargar tareas.`);
             }
 
             const tareasCargadas = await response.json();
@@ -158,7 +163,6 @@ async function cargarTareasDelServidor() {
                             duracion: parseInt(tarea.duracion) 
                         }));
                     } else {
-                        // Si por alguna razón la entrada de fecha no es un array, la inicializamos
                         console.warn(`La entrada para la fecha ${fecha} en tareas.json no es un array. Corrigiendo.`);
                         tareasCargadas[fecha] = [];
                     }
@@ -169,48 +173,42 @@ async function cargarTareasDelServidor() {
             }
             
             tareas = tareasCargadas; // Asigna las tareas cargadas a la variable global
-            console.log("Tareas cargadas (desde tareas.json):", tareas);
-            resolve();
+            console.log("Tareas cargadas (desde Node.js API):", tareas);
+            // resolve();
         } catch (error) {
-            console.error("Error al cargar tareas desde tareas.json:", error);
-            alert("No se pudieron cargar las tareas existentes. Verifica tareas.json o los permisos.");
+            console.error("Error al cargar tareas desde la API de Node.js:", error);
+            alert("No se pudieron cargar las tareas existentes. Verifica la conexión con el servidor Node.js.");
             tareas = {}; // Asegura que 'tareas' siempre sea un objeto válido incluso con errores
-            reject(error);
+            // reject(error);
         }
-    });
+    // }); // Fin de la Promise, ya no necesaria
 }
 
 
 function guardarTareasEnServidor() {
-    fetch('guardar_tarea.php', {
+    // La URL ahora apunta a tu API de Node.js
+    fetch('/api/guardar_tarea', { // <-- ¡CAMBIO CLAVE AQUÍ!
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(tareas) // Envía el objeto 'tareas' COMPLETO
+        body: JSON.stringify(tareas) // Envía el objeto 'tareas' completo al servidor
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error(`Error HTTP! Estado: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.json();
+        return response.text(); // El servidor Node.js devuelve un mensaje de texto
     })
-    .then(data => {
-        console.log('Respuesta del servidor al guardar:', data);
-        if (data.status === 'ok') {
-            console.log('Tareas guardadas en el archivo JSON del servidor.');
-        } else {
-            console.error('Error al guardar tareas en el servidor:', data.message);
-            alert('Hubo un error al guardar las tareas: ' + data.message);
-        }
+    .then(message => {
+        console.log('Tareas guardadas con éxito:', message);
+        // Opcional: Puedes dar un feedback al usuario si lo necesitas
+        // alert('Tareas guardadas con éxito!');
     })
     .catch(error => {
-        console.error('Error al comunicarse con el servidor para guardar:', error);
-        alert('No se pudo conectar con el servidor para guardar las tareas.');
+        console.error('Error al guardar tareas:', error);
+        alert('Error al guardar las tareas. Por favor, inténtalo de nuevo.');
     });
-
-    // Actualiza la UI localmente después de haber modificado 'tareas'
-    renderizarTodoElCalendarioUI(); 
 }
 
 
