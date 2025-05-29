@@ -5,7 +5,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4d2ff7, #f10713);
+    background: linear-gradient(135deg, #4d2ff771, #ff0901);
     color: #fff;
     display: flex; /* Hacemos el body un flex container */
     height: 100vh;

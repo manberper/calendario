@@ -59,19 +59,28 @@ function formatearFecha(date) {
 }
 
 function generarHoras() {
-    horaSelect.innerHTML = "";
-    editarHoraSelect.innerHTML = "";
-    for (let i = 8; i < 21; i++) { // Horas de 8:00 a 20:00
-        const hora = String(i).padStart(2, "0") + ":00";
-        const option = document.createElement("option");
-        option.value = hora;
-        option.textContent = hora;
-        horaSelect.appendChild(option);
+    horaSelect.innerHTML = "";       // Limpia las opciones actuales del select principal
+    editarHoraSelect.innerHTML = ""; // Limpia las opciones actuales del select de edición
 
-        const editarOption = document.createElement("option");
-        editarOption.value = hora;
-        editarOption.textContent = hora;
-        editarHoraSelect.appendChild(editarOption);
+    // Bucle para generar horas y minutos
+    for (let h = 8; h < 20; h++) { // Recorre cada hora del día (8 a 19)
+        for (let m = 0; m < 60; m += 15) { // Recorre los minutos en intervalos de 15 (0, 15, 30, 45)
+            const horaFormateada = String(h).padStart(2, '0');
+            const minutoFormateado = String(m).padStart(2, '0');
+            const tiempo = `${horaFormateada}:${minutoFormateado}`; // Formato HH:MM
+
+            // Crear y añadir opción para el select principal
+            const option = document.createElement("option");
+            option.value = tiempo;
+            option.textContent = tiempo;
+            horaSelect.appendChild(option);
+
+            // Crear y añadir opción para el select de edición
+            const editarOption = document.createElement("option");
+            editarOption.value = tiempo;
+            editarOption.textContent = tiempo;
+            editarHoraSelect.appendChild(editarOption);
+        }
     }
 }
 
