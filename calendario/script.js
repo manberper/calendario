@@ -134,7 +134,7 @@ async function cargarTareasDelServidor() { // Cambiado el nombre de la función 
     // return new Promise(async (resolve, reject) => { // La Promise explícita ya no es tan necesaria con async/await
         try {
             // Se lee el archivo JSON desde la nueva ruta de la API de Node.js
-            const response = await fetch('/api/tareas.json'); // <-- ¡CAMBIO CLAVE AQUÍ!
+            const response = await fetch('tareas.json'); // <-- ¡CAMBIO CLAVE AQUÍ!
             
             // Si el servidor Node.js devuelve un error (ej. 404), ya lo manejamos devolviendo un JSON vacío
             // Si hay un error HTTP distinto de 404 (ej. 500 del server), lanzamos el error
