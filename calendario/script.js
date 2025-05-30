@@ -130,85 +130,100 @@ function cargarOpcionesProfesional() {
     }
 }
 
-async function cargarTareasDelServidor() { // Cambiado el nombre de la función para mayor concisión, si lo deseas
-    // return new Promise(async (resolve, reject) => { // La Promise explícita ya no es tan necesaria con async/await
-        try {
-            // Se lee el archivo JSON desde la nueva ruta de la API de Node.js
-            const response = await fetch('tareas.json'); // <-- ¡CAMBIO CLAVE AQUÍ!
-            
-            // Si el servidor Node.js devuelve un error (ej. 404), ya lo manejamos devolviendo un JSON vacío
-            // Si hay un error HTTP distinto de 404 (ej. 500 del server), lanzamos el error
-            if (!response.ok) {
-                // El server.js ya envía un JSON vacío si el archivo no existe (404),
-                // por lo que este `if (response.status === 404)` es menos probable que se active,
-                // a menos que cambies la lógica del server.js.
-                // Sin embargo, lo mantendremos para ser robustos ante cualquier 404 inesperado.
-                if (response.status === 404) {
-                    console.warn("tareas.json no encontrado en la API o vacío. Inicializando calendario.");
-                    tareas = {}; // Si no existe, inicializa 'tareas' como un objeto vacío
-                    // resolve(); // Ya no se necesita resolve/reject explícito con el patrón try/catch
-                    return;
-                }
-                throw new Error(`HTTP error! status: ${response.status} al cargar tareas.`);
-            }
+async function cargarTareasDelServidor() {
+    try {
+        // Fetch from your local Node.js server's API endpoint
+        const response = await fetch('/api/tareas');
 
-            const tareasCargadas = await response.json();
-            
-            // Validación para asegurar que 'tareasCargadas' es un objeto y procesar duraciones
-            if (typeof tareasCargadas === 'object' && tareasCargadas !== null) {
-                for (const fecha in tareasCargadas) {
-                    if (Array.isArray(tareasCargadas[fecha])) {
-                        tareasCargadas[fecha] = tareasCargadas[fecha].map(tarea => ({
-                            ...tarea,
-                            duracion: parseInt(tarea.duracion) 
-                        }));
-                    } else {
-                        console.warn(`La entrada para la fecha ${fecha} en tareas.json no es un array. Corrigiendo.`);
-                        tareasCargadas[fecha] = [];
-                    }
-                }
-            } else {
-                console.warn("El contenido de tareas.json no es un objeto válido. Inicializando calendario como vacío.");
-                tareasCargadas = {};
-            }
-            
-            tareas = tareasCargadas; // Asigna las tareas cargadas a la variable global
-            console.log("Tareas cargadas (desde Node.js API):", tareas);
-            // resolve();
-        } catch (error) {
-            console.error("Error al cargar tareas desde la API de Node.js:", error);
-            alert("No se pudieron cargar las tareas existentes. Verifica la conexión con el servidor Node.js.");
-            tareas = {}; // Asegura que 'tareas' siempre sea un objeto válido incluso con errores
-            // reject(error);
+        if (!response.ok) {
+            // If the server responds with an HTTP error
+            throw new Error(`HTTP error! status: ${response.status} when loading tasks.`);
         }
-    // }); // Fin de la Promise, ya no necesaria
+
+        const tareasCargadas = await response.json();
+
+        // Validate and process the loaded tasks
+        if (typeof tareasCargadas === 'object' && tareasCargadas !== null) {
+            for (const fecha in tareasCargadas) {
+                if (Array.isArray(tareasCargadas[fecha])) {
+                    tareasCargadas[fecha] = tareasCargadas[fecha].map(tarea => ({
+                        ...tarea,
+                        duracion: parseInt(tarea.duracion) // Ensure duration is a number
+                    }));
+                } else {
+                    console.warn(`Entry for date ${fecha} is not an array. Correcting.`);
+                    tareasCargadas[fecha] = [];
+                }
+            }
+        } else {
+            console.warn("Task response content is not a valid object. Initializing calendar as empty.");
+            tareasCargadas = {};
+        }
+
+        tareas = tareasCargadas; // Update your global tasks object
+        console.log("Tasks loaded (from MongoDB Atlas via server.js):", tareas);
+        generarCalendario(); // Regenerate the calendar UI
+        renderizarProximasTareas(); // Update upcoming tasks display
+    } catch (error) {
+        console.error("Error loading tasks:", error);
+        alert("Could not load existing tasks. Check Node.js server and MongoDB connection.");
+        tareas = {}; // Ensure 'tareas' is always a valid object
+        generarCalendario(); // Render calendar even if no tasks
+    }
 }
 
 
-function guardarTareasEnServidor() {
-    // La URL ahora apunta a tu API de Node.js
-    fetch('/api/guardar_tarea', { // <-- ¡CAMBIO CLAVE AQUÍ!
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tareas) // Envía el objeto 'tareas' completo al servidor
-    })
-    .then(response => {
+async function guardarTareasEnServidor(tarea) { // Expects a single 'tarea' object
+    // Generate an ID if it's a new task (assuming your UI doesn't assign one yet)
+    if (!tarea.id) {
+        tarea.id = Date.now().toString(); // A simple ID generator
+        // Optional: set a default for 'completada' if not provided by the UI
+        if (typeof tarea.completada === 'undefined') {
+            tarea.completada = false;
+        }
+    }
+
+    try {
+        const response = await fetch('/api/tarea', {
+            method: 'POST', // Use POST for create/update (upsert)
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tarea) // Send the task object
+        });
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return response.text(); // El servidor Node.js devuelve un mensaje de texto
-    })
-    .then(message => {
-        console.log('Tareas guardadas con éxito:', message);
-        // Opcional: Puedes dar un feedback al usuario si lo necesitas
-        // alert('Tareas guardadas con éxito!');
-    })
-    .catch(error => {
-        console.error('Error al guardar tareas:', error);
-        alert('Error al guardar las tareas. Por favor, inténtalo de nuevo.');
-    });
+
+        const result = await response.json();
+        console.log('Task saved/updated successfully:', result.message);
+        // After saving, reload all tasks to refresh the UI
+        await cargarTareasDelServidor();
+    } catch (error) {
+        console.error('Error saving task:', error);
+        alert('Error saving the task. Please try again.');
+    }
+}
+
+// This new function handles sending the DELETE request to your backend
+async function eliminarTareaDeDB(tareaId) { // Takes the unique ID of the task
+    try {
+        const response = await fetch(`/api/tarea/${tareaId}`, { // DELETE route
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Task deleted successfully:', result.message);
+        await cargarTareasDelServidor(); // Reload tasks to update the view
+    } catch (error) {
+        console.error('Error deleting task:', error);
+        alert('Error deleting the task.');
+    }
 }
 
 
@@ -501,23 +516,28 @@ btnGuardar.addEventListener("click", () => {
   }
 });
 
-btnEliminar.addEventListener("click", () => {
-  if (tareaSeleccionada.fecha !== null && tareaSeleccionada.indiceEnArray !== null) {
-    if (confirm("¿Estás seguro de que quieres eliminar esta tarea?")) {
-        // Eliminar la tarea del array
-        tareas[tareaSeleccionada.fecha].splice(tareaSeleccionada.indiceEnArray, 1);
+btnEliminar.addEventListener("click", async () => { // Add 'async' here
+    // Ensure 'tareaSeleccionada' exists and has a unique 'id' property
+    if (tareaSeleccionada && tareaSeleccionada.id) {
+        if (confirm("¿Are you sure you want to delete this task?")) {
+            try {
+                // Call the API function to delete the task in MongoDB
+                await eliminarTareaDeDB(tareaSeleccionada.id);
 
-        // Si no quedan tareas para esa fecha, eliminar la entrada de la fecha
-        if (tareas[tareaSeleccionada.fecha].length === 0) {
-            delete tareas[tareaSeleccionada.fecha];
+                // If deletion was successful, close the modals.
+                // cargarTareasDelServidor() is already called within eliminarTareaDeDB()
+                // to refresh the calendar.
+                modalTarea.style.display = "none";
+                modalDetalles.style.display = "none";
+            } catch (error) {
+                // Error is already handled in eliminarTareaDeDB, this is just a fallback
+                console.error("Error processing task deletion:", error);
+                alert("There was a problem trying to delete the task.");
+            }
         }
-        guardarTareasEnServidor(); // Esto llamará a renderizarTodoElCalendarioUI
-        modalTarea.style.display = "none"; // Cerrar el modal de edición
-        modalDetalles.style.display = "none"; // Asegurar que el modal de detalles también se cierre
     } else {
-        alert("La tarea a eliminar no se encontró.");
+        alert("No valid task selected for deletion.");
     }
-  }
 });
 
 btnCancelar.addEventListener("click", () => {

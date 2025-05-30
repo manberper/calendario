@@ -1,78 +1,114 @@
-// server.js
+// calendario/server.js
 
-// Importa los módulos necesarios
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const path = require('path');
-const fs = require('fs').promises; // Usamos la versión de promesas para operaciones asíncronas
-const bodyParser = require('body-parser'); // Para parsear el body de las peticiones POST
+const fs = require('fs').promises; // Para operaciones de sistema de archivos, si las necesitas
 
-const app = express(); // Crea una instancia de la aplicación Express
-const PORT = process.env.PORT || 3000; // Define el puerto en el que el servidor escuchará (usa 3000 por defecto)
+// Cargar variables de entorno desde .env
+dotenv.config();
 
-// --- MIDDLEWARE ---
+const app = express();
+const PORT = process.env.PORT || 3000; // Puedes configurar el puerto en .env si quieres
 
-// 1. Sirve archivos estáticos
-// Esto le dice a Express que sirva archivos HTML, CSS, JS, imágenes, etc.,
-// directamente desde la carpeta donde se encuentra server.js (tu carpeta raíz del proyecto).
-// Esto hará que http://localhost:3000/index.html funcione, y también /script.js, /style.css, etc.
-app.use(express.static(__dirname));
+// --- Conexión a MongoDB Atlas ---
+const dbURI = process.env.MONGODB_URI;
 
-// 2. Parsea el cuerpo de las peticiones HTTP
-// Necesario para leer los datos que se envían en el cuerpo de las peticiones POST (como el JSON de las tareas)
-app.use(bodyParser.json()); // Para peticiones que envían JSON (como la que guarda tareas)
-app.use(bodyParser.urlencoded({ extended: true })); // Para peticiones con datos codificados en la URL (menos probable para tu caso, pero útil)
+mongoose.connect(dbURI)
+    .then(() => console.log('Conectado a MongoDB Atlas'))
+    .catch(err => console.error('Error de conexión a MongoDB Atlas:', err));
 
+// --- Definir el Esquema y el Modelo de Tarea ---
+// Asegúrate de que este esquema coincide con la estructura de tus objetos de tarea
+const tareaSchema = new mongoose.Schema({
+    id: { type: String, required: true, unique: true }, // Usar tu ID único para cada tarea
+    titulo: String,
+    descripcion: String,
+    fecha: String, // Formato "YYYY-MM-DD"
+    hora: String,
+    duracion: Number,
+    categoria: String,
+    completada: { type: Boolean, default: false } // Valor por defecto
+}, { _id: false }); // No crear un _id automático si ya usas tu propio 'id'
 
-// --- RUTAS DE API (TU BACKEND) ---
+const Tarea = mongoose.models.Tarea || mongoose.model('Tarea', tareaSchema);
 
-// Ruta para LEER las tareas
-// Cuando el frontend (script.js) haga un GET a /api/tareas.json
-app.get('/api/tareas.json', async (req, res) => {
-    // La ruta al archivo tareas.json está directamente en la misma carpeta raíz
-    const filePath = path.join(__dirname, 'tareas.json');
+// --- Middleware ---
+app.use(bodyParser.json()); // Para parsear el body de las peticiones POST y PUT como JSON
+app.use(bodyParser.urlencoded({ extended: true })); // Para URLs codificadas
+
+// Servir archivos estáticos desde la misma carpeta del servidor
+app.use(express.static(path.join(__dirname))); // Sirve los archivos de la carpeta 'calendario'
+
+// --- RUTAS DE API ---
+
+// Ruta para LEER todas las tareas
+// GET /api/tareas
+app.get('/api/tareas', async (req, res) => {
+    try {
+        const tareas = await Tarea.find({});
+        // Formatear las tareas para que se agrupen por fecha como tu frontend espera
+        const tareasPorFecha = {};
+        tareas.forEach(tarea => {
+            if (!tareasPorFecha[tarea.fecha]) {
+                tareasPorFecha[tarea.fecha] = [];
+            }
+            tareasPorFecha[tarea.fecha].push(tarea.toObject());
+        });
+        res.json(tareasPorFecha);
+    } catch (error) {
+        console.error('Error al obtener tareas:', error);
+        res.status(500).json({ message: 'Error interno del servidor al obtener tareas.' });
+    }
+});
+
+// Ruta para CREAR/ACTUALIZAR una tarea
+// POST /api/tarea
+app.post('/api/tarea', async (req, res) => {
+    const nuevaTarea = req.body;
+    if (!nuevaTarea || !nuevaTarea.id) {
+        return res.status(400).json({ message: 'Datos de tarea incompletos (falta id).' });
+    }
 
     try {
-        const data = await fs.readFile(filePath, 'utf8');
-        res.json(JSON.parse(data)); // Envía el contenido JSON como respuesta
+        const tareaExistente = await Tarea.findOneAndUpdate(
+            { id: nuevaTarea.id },
+            nuevaTarea,
+            { upsert: true, new: true } // upsert: crea si no existe; new: devuelve el documento actualizado
+        );
+        res.status(200).json({ message: 'Tarea guardada con éxito.', tarea: tareaExistente });
     } catch (error) {
-        console.error('Error al leer tareas.json:', error);
-        // Si el archivo no existe (ENOENT), devuelve un objeto JSON vacío para que el frontend no falle
-        if (error.code === 'ENOENT') {
-            res.json({});
-        } else {
-            // Para otros errores, envía un código de error 500 y un mensaje
-            res.status(500).send('Error interno del servidor al leer tareas.');
+        console.error('Error al guardar tarea:', error);
+        res.status(500).json({ message: 'Error interno del servidor al guardar tarea.' });
+    }
+});
+
+// Ruta para ELIMINAR una tarea
+// DELETE /api/tarea/:id
+app.delete('/api/tarea/:id', async (req, res) => {
+    const tareaId = req.params.id;
+
+    try {
+        const result = await Tarea.deleteOne({ id: tareaId });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: 'Tarea no encontrada.' });
         }
-    }
-});
-
-// Ruta para GUARDAR/ACTUALIZAR las tareas
-// Cuando el frontend (script.js) haga un POST a /api/guardar_tarea
-app.post('/api/guardar_tarea', async (req, res) => {
-    const nuevasTareas = req.body; // Los datos JSON enviados desde el frontend estarán en req.body
-
-    // Validación básica: asegura que se recibieron datos
-    if (!nuevasTareas) {
-        return res.status(400).send('Datos de tarea no proporcionados.');
-    }
-
-    // La ruta al archivo tareas.json está directamente en la misma carpeta raíz
-    const filePath = path.join(__dirname, 'tareas.json');
-
-    try {
-        // Escribe el objeto JSON completo en el archivo.
-        // JSON.stringify(nuevasTareas, null, 4) formatea el JSON con indentación para que sea legible.
-        await fs.writeFile(filePath, JSON.stringify(nuevasTareas, null, 4), 'utf8');
-        res.status(200).send('Tareas guardadas con éxito.'); // Envía una respuesta de éxito
+        res.status(200).json({ message: 'Tarea eliminada con éxito.' });
     } catch (error) {
-        console.error('Error al escribir tareas.json:', error);
-        res.status(500).send('Error interno del servidor al guardar tareas.'); // Envía un error si algo falla
+        console.error('Error al eliminar tarea:', error);
+        res.status(500).json({ message: 'Error interno del servidor al eliminar tarea.' });
     }
 });
 
+// Ruta para servir el index.html al acceder a la raíz del servidor
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-// --- INICIAR EL SERVIDOR ---
-
+// Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor Node.js escuchando en http://localhost:${PORT}`);
     console.log(`Accede a tu calendario en: http://localhost:${PORT}/index.html`);
